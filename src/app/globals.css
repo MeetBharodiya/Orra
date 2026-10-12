@@ -1,26 +1,686 @@
+/* ─── ORRA NAILS — Global Styles ────────────────────────────────────────────── */
+/* Fonts loaded from Google Fonts in layout.tsx */
+
 @import "tailwindcss";
 
+/* ─── Design Tokens ─────────────────────────────────────────────────────────── */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Colours */
+  --linen: #F5EEE4;
+  --parchment: #FBF7F1;
+  --oat: #E9DDCC;
+  --espresso: #2B1B13;
+  --cocoa: #4A3023;
+  --ink: #1A100B;
+  --sage: #8A9A7B;
+  --deep-olive: #4F5B3F;
+  --gold: #B98A4E;
+  --soft-gold: #D9B57C;
+  --clay-rose: #B5705C;
+  --blush: #E8CFC3;
+
+  /* Intention tints */
+  --grounded-tint: #E4E1D2;
+  --radiant-tint: #F1E3C8;
+  --tender-tint: #F0DDD3;
+  --magnetic-tint: #D8CBBE;
+  --vowed-tint: #F4EEE6;
+
+  /* Typography */
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-ui: 'Jost', system-ui, sans-serif;
+
+  /* Easing */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Spacing */
+  --section-pad: 6rem; /* 96px */
+  --max-w: 1280px;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+@media (max-width: 768px) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --section-pad: 4rem; /* 64px */
   }
 }
 
+/* ─── Base ───────────────────────────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-ui);
+  background-color: var(--linen);
+  color: var(--espresso);
+  font-size: 15px;
+  line-height: 1.65;
+  font-weight: 300;
+  overflow-x: hidden;
+}
+
+/* ─── Paper Grain Texture (SVG noise, 3-4% opacity) ─────────────────────────── */
+.grain::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 999;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-size: 256px 256px;
+}
+
+/* ─── Typography ─────────────────────────────────────────────────────────────── */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: 300;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+
+.hero-headline {
+  font-size: clamp(3rem, 6vw, 6rem);
+  line-height: 1.05;
+  font-weight: 300;
+  font-family: var(--font-display);
+}
+
+.h1 { font-size: clamp(2.5rem, 5vw, 4rem); }
+.h2 { font-size: clamp(2rem, 4vw, 3rem); }
+.h3 { font-size: clamp(1.4rem, 2.5vw, 1.875rem); }
+
+.eyebrow {
+  font-family: var(--font-ui);
+  font-weight: 500;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.tagline {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 300;
+}
+
+/* ─── Focus Rings (WCAG AA, 2px gold) ───────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* ─── Buttons ────────────────────────────────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  height: 48px;
+  padding: 0 1.75rem;
+  font-family: var(--font-ui);
+  font-weight: 500;
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-radius: 2px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.35s var(--ease-out);
+  position: relative;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, var(--gold) 0%, var(--soft-gold) 100%);
+  opacity: 0;
+  transform: translateX(-100%);
+  transition: opacity 0.35s var(--ease-out), transform 0.35s var(--ease-out);
+}
+
+.btn:hover::before {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.btn span, .btn svg {
+  position: relative;
+  z-index: 1;
+}
+
+.btn-primary {
+  background: var(--espresso);
+  color: var(--parchment);
+  border-color: var(--espresso);
+}
+
+.btn-primary:hover {
+  color: var(--espresso);
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--espresso);
+  border-color: var(--gold);
+}
+
+.btn-outline:hover {
+  color: var(--espresso);
+  border-color: transparent;
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--espresso);
+  border-color: transparent;
+}
+
+.btn-light {
+  background: var(--parchment);
+  color: var(--espresso);
+  border-color: var(--parchment);
+}
+
+.btn-light:hover {
+  color: var(--espresso);
+}
+
+.btn-sm {
+  height: 36px;
+  padding: 0 1.25rem;
+  font-size: 11px;
+}
+
+/* ─── Cards ──────────────────────────────────────────────────────────────────── */
+.card {
+  background: var(--parchment);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+/* ─── Arch Image Mask ────────────────────────────────────────────────────────── */
+.arch {
+  border-radius: 999px 999px 0 0;
+  overflow: hidden;
+}
+
+/* ─── Hairline Divider ───────────────────────────────────────────────────────── */
+.hairline {
+  height: 1px;
+  background: var(--gold);
+  opacity: 0.4;
+}
+
+.hairline-dark {
+  height: 1px;
+  background: var(--soft-gold);
+  opacity: 0.3;
+}
+
+/* ─── Section Padding ────────────────────────────────────────────────────────── */
+.section {
+  padding: var(--section-pad) 1.5rem;
+}
+
+.section-inner {
+  max-width: var(--max-w);
+  margin: 0 auto;
+}
+
+/* ─── Gold Text ──────────────────────────────────────────────────────────────── */
+.text-gold { color: var(--gold); }
+.text-soft-gold { color: var(--soft-gold); }
+
+/* ─── Scroll Reveal (JS adds .revealed) ─────────────────────────────────────── */
+.reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.7s var(--ease-out), transform 0.7s var(--ease-out);
+}
+
+.reveal.revealed {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .btn::before {
+    transition: none;
+  }
+}
+
+/* ─── Product Arch image wipe-in ─────────────────────────────────────────────── */
+.arch-reveal {
+  clip-path: inset(100% 0 0 0);
+  transition: clip-path 0.9s var(--ease-out);
+}
+
+.arch-reveal.revealed {
+  clip-path: inset(0% 0 0 0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .arch-reveal {
+    clip-path: inset(0% 0 0 0);
+  }
+}
+
+/* ─── Leaf Shadow Overlay (hero drifting shapes) ─────────────────────────────── */
+@keyframes leaf-drift {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  33% { transform: translate(20px, -15px) rotate(8deg); }
+  66% { transform: translate(-10px, 20px) rotate(-5deg); }
+  100% { transform: translate(0, 0) rotate(0deg); }
+}
+
+.leaf-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.leaf-overlay::before,
+.leaf-overlay::after {
+  content: '';
+  position: absolute;
+  border-radius: 60% 40% 50% 70% / 50% 60% 40% 55%;
+  background: var(--espresso);
+  opacity: 0.07;
+  filter: blur(32px);
+  animation: leaf-drift 40s ease-in-out infinite;
+}
+
+.leaf-overlay::before {
+  width: 400px;
+  height: 300px;
+  top: 10%;
+  right: 15%;
+  animation-delay: -10s;
+}
+
+.leaf-overlay::after {
+  width: 300px;
+  height: 400px;
+  bottom: 20%;
+  left: 10%;
+  animation-delay: -25s;
+  animation-duration: 50s;
+}
+
+/* ─── Announcement Bar ───────────────────────────────────────────────────────── */
+@keyframes slide-up {
+  from { transform: translateY(100%); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+/* ─── Marquee ────────────────────────────────────────────────────────────────── */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+.marquee-inner {
+  display: flex;
+  animation: marquee 30s linear infinite;
+  will-change: transform;
+}
+
+.marquee-inner:hover {
+  animation-play-state: paused;
+}
+
+/* ─── Scrollbar Styling ──────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--linen); }
+::-webkit-scrollbar-thumb { background: var(--oat); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--gold); }
+
+/* ─── Selection ──────────────────────────────────────────────────────────────── */
+::selection {
+  background: var(--gold);
+  color: var(--espresso);
+}
+
+/* ─── Backdrop (drawer overlay) ─────────────────────────────────────────────── */
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(27, 16, 11, 0.5);
+  backdrop-filter: blur(2px);
+  z-index: 40;
+}
+
+/* ─── Drawer ─────────────────────────────────────────────────────────────────── */
+.drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: min(420px, 100vw);
+  background: var(--parchment);
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ─── Rating Stars ───────────────────────────────────────────────────────────── */
+.star-filled { color: var(--gold); }
+.star-empty  { color: var(--oat); }
+
+/* ─── Swatch Grid ────────────────────────────────────────────────────────────── */
+.swatch {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: border-color 0.2s, transform 0.2s;
+}
+
+.swatch:hover, .swatch.selected {
+  border-color: var(--gold);
+  transform: scale(1.15);
+}
+
+/* ─── Size Chips ─────────────────────────────────────────────────────────────── */
+.size-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  height: 44px;
+  padding: 0 0.75rem;
+  border: 1px solid var(--oat);
+  border-radius: 2px;
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 400;
+  cursor: pointer;
+  transition: all 0.2s var(--ease-out);
+  background: transparent;
+  color: var(--espresso);
+}
+
+.size-chip:hover {
+  border-color: var(--espresso);
+}
+
+.size-chip.selected {
+  background: var(--espresso);
+  color: var(--parchment);
+  border-color: var(--espresso);
+}
+
+.size-chip.unavailable {
+  opacity: 0.35;
+  cursor: not-allowed;
+  text-decoration: line-through;
+}
+
+/* ─── Filter Bar ─────────────────────────────────────────────────────────────── */
+.filter-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  height: 32px;
+  padding: 0 0.75rem;
+  background: var(--oat);
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 400;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: var(--espresso);
+}
+
+.filter-chip.active {
+  background: var(--espresso);
+  color: var(--parchment);
+}
+
+/* ─── Accordion ──────────────────────────────────────────────────────────────── */
+.accordion-content {
+  overflow: hidden;
+  transition: max-height 0.45s var(--ease-out), opacity 0.35s;
+}
+
+/* ─── Fleur Ornament ─────────────────────────────────────────────────────────── */
+.fleur-divider {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: var(--gold);
+}
+
+.fleur-divider::before,
+.fleur-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--gold);
+  opacity: 0.4;
+}
+
+/* ─── Intention Cards ────────────────────────────────────────────────────────── */
+.intention-card {
+  border-radius: 999px 999px 0 0;
+  overflow: hidden;
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.4s var(--ease-out), box-shadow 0.4s var(--ease-out);
+}
+
+.intention-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 24px 48px rgba(43, 27, 19, 0.12);
+}
+
+/* ─── Product Card ───────────────────────────────────────────────────────────── */
+.product-card {
+  cursor: pointer;
+  position: relative;
+}
+
+.product-card .product-image {
+  transition: transform 0.5s var(--ease-out);
+}
+
+.product-card:hover .product-image {
+  transform: scale(1.03);
+}
+
+.product-card .gold-underline {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--gold);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s var(--ease-out);
+}
+
+.product-card:hover .gold-underline {
+  transform: scaleX(1);
+}
+
+/* ─── Toast ──────────────────────────────────────────────────────────────────── */
+@keyframes toast-in {
+  from { transform: translateX(100%); opacity: 0; }
+  to   { transform: translateX(0);    opacity: 1; }
+}
+
+.toast {
+  animation: toast-in 0.4s var(--ease-out);
+}
+
+/* ─── Announcement Ticker ────────────────────────────────────────────────────── */
+@keyframes fade-cycle {
+  0%, 28%  { opacity: 1; transform: translateY(0); }
+  33%      { opacity: 0; transform: translateY(-8px); }
+  38%, 100%{ opacity: 0; transform: translateY(8px); }
+}
+
+/* ─── Studio Stepper ─────────────────────────────────────────────────────────── */
+.step-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--oat);
+  transition: background 0.3s, transform 0.3s;
+}
+
+.step-dot.active {
+  background: var(--gold);
+  transform: scale(1.4);
+}
+
+/* ─── Quiz Progress Bar ──────────────────────────────────────────────────────── */
+.quiz-progress {
+  height: 1px;
+  background: var(--soft-gold);
+  transform-origin: left;
+  transition: transform 0.5s var(--ease-out);
+}
+
+/* ─── Navigation ─────────────────────────────────────────────────────────────── */
+.nav-link {
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: inherit;
+  text-decoration: none;
+  position: relative;
+  transition: color 0.2s;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--gold);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s var(--ease-out);
+}
+
+.nav-link:hover::after,
+.nav-link.active::after {
+  transform: scaleX(1);
+}
+
+/* ─── Mobile Menu ────────────────────────────────────────────────────────────── */
+@keyframes menu-overlay-in {
+  from { opacity: 0; transform: translateX(-100%); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.mobile-menu {
+  animation: menu-overlay-in 0.4s var(--ease-out);
+}
+
+/* ─── Responsive utilities ───────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .hide-mobile { display: none !important; }
+}
+
+@media (min-width: 641px) {
+  .show-mobile { display: none !important; }
+}
+
+/* ─── Snap Scroll ────────────────────────────────────────────────────────────── */
+.snap-x-container {
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+
+.snap-item {
+  scroll-snap-align: start;
+}
+
+/* ─── Price transition ───────────────────────────────────────────────────────── */
+.price-transition {
+  transition: opacity 0.2s var(--ease-out);
+}
+
+.price-loading {
+  opacity: 0.4;
+}
+
+/* ─── Loading Skeleton ───────────────────────────────────────────────────────── */
+@keyframes shimmer {
+  from { background-position: -400px 0; }
+  to   { background-position: 400px 0; }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, var(--oat) 25%, var(--parchment) 50%, var(--oat) 75%);
+  background-size: 800px 100%;
+  animation: shimmer 1.8s linear infinite;
+  border-radius: 4px;
+}
+
+/* ─── Checkout Accordion ─────────────────────────────────────────────────────── */
+.checkout-step {
+  border: 1px solid var(--oat);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+
+.checkout-step-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.5rem;
+  cursor: pointer;
+  background: var(--parchment);
+  transition: background 0.2s;
+}
+
+/* ─── Success Page Box Animation ────────────────────────────────────────────── */
+@keyframes box-lid-open {
+  0%   { transform: rotateX(0deg); }
+  50%  { transform: rotateX(-110deg); }
+  100% { transform: rotateX(-110deg); }
+}
+
+/* ─── Reduced motion: override all animations ────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .leaf-overlay::before,
+  .leaf-overlay::after {
+    animation: none;
+  }
 }
