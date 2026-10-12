@@ -276,7 +276,7 @@ export default function Footer() {
           }}
         >
           <p style={{ fontSize: 11, color: 'rgba(251,247,241,0.4)', fontFamily: 'var(--font-ui)' }}>
-            © {new Date().getFullYear()} ORRA Nails. All rights reserved.
+            © 2026 ORRA Nails. All rights reserved.
           </p>
           <p
             style={{
